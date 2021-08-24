@@ -1,13 +1,58 @@
 function createMedalTable(medals) {
-    // Parse the medal data to produce a medaltable
-    // The winner gets 3 points, second place 2 points and third place 1 point
-    return
+    // First Lets define the dictionary for our results
+    let pointsDict = {}
+
+    // Access Medals won for each event
+    medals.forEach( stat => {
+
+        // Isolate event's podium scores
+        let podiumResults = stat["podium"]
+
+        // format the scores to remove ordinal placement
+        var countriesScores = podiumResults.map( function(data) { 
+
+            var placement = data.charAt(0)
+            var country = data.substring(2)
+            
+            // We need to map each placement with a score
+            // then return it back to the array
+
+            switch (placement) {
+                case "1" :
+                    return [3, country]
+                case "2" :
+                    return [2, country]
+                case "3" :
+                    return [1, country]
+            }  
+        })
+
+        // Iterate through each countries and score
+        countriesScores.forEach( country => {
+
+            var score = country[0]
+            var name = country[1]
+
+            // Check that country has not already been added to count
+            if (pointsDict.hasOwnProperty(name)){
+
+                // increase score if country has already been added
+                pointsDict[name] += score
+
+            // Add new country and their score if not already added
+            } else {
+                pointsDict[name] = score
+            }
+        });   
+    });
+
+    return pointsDict
 }
 
 describe("Medal Table Generator", () => {
-    // Test function, please do not edit
+
     it("creates correct data structure ", () => {
-        // Input data
+       
         const medals = [{
                 sport: "cycling",
                 podium: ["1.China", "2.Germany", "3.ROC"]
@@ -40,6 +85,7 @@ describe("Medal Table Generator", () => {
         };
 
         const actualResult = createMedalTable(medals);
+
         expect(actualResult).toMatchObject(medalTable);
     });
 });
