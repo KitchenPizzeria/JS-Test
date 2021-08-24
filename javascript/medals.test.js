@@ -1,6 +1,6 @@
 function createMedalTable(medals) {
     // First Lets define the dictionary for our results
-    let pointsTally = {}
+    var pointsTally = {}
 
     // Access Medals won for each event
     medals.forEach( stat => {
@@ -37,8 +37,8 @@ function createMedalTable(medals) {
             // else the country will be added to the list with the score achieved from that event
             pointsTally.hasOwnProperty(name) ? pointsTally[name] += points : pointsTally[name] = points
         });   
-    });
-
+    }); 
+    
     return pointsTally
 }
 
