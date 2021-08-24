@@ -1,15 +1,15 @@
 function createMedalTable(medals) {
     // First Lets define the dictionary for our results
-    let pointsDict = {}
+    let pointsTally = {}
 
     // Access Medals won for each event
     medals.forEach( stat => {
 
         // Isolate event's podium scores
-        let podiumResults = stat["podium"]
+        var podiumResults = stat["podium"]
 
-        // format the scores to remove ordinal placement
-        var countriesScores = podiumResults.map( function(data) { 
+        // Create a mapping so that each countries place can be converted to a score
+        var scores = podiumResults.map( function(data) { 
 
             var placement = data.charAt(0)
             var country = data.substring(2)
@@ -27,26 +27,19 @@ function createMedalTable(medals) {
             }  
         })
 
-        // Iterate through each countries and score
-        countriesScores.forEach( country => {
+        // Iterate through each score and populate the points tally with the country and their acquired score
+        scores.forEach( country => {
 
-            var score = country[0]
+            var points = country[0]
             var name = country[1]
 
-            // Check that country has not already been added to count
-            if (pointsDict.hasOwnProperty(name)){
-
-                // increase score if country has already been added
-                pointsDict[name] += score
-
-            // Add new country and their score if not already added
-            } else {
-                pointsDict[name] = score
-            }
+            // Ternary Operator: If country is in the tally, then the score will be added to their current score
+            // else the country will be added to the list with the score achieved from that event
+            pointsTally.hasOwnProperty(name) ? pointsTally[name] += points : pointsTally[name] = points
         });   
     });
 
-    return pointsDict
+    return pointsTally
 }
 
 describe("Medal Table Generator", () => {
