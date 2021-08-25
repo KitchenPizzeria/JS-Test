@@ -1,21 +1,21 @@
 function createMedalTable(medals) {
     // First Lets define the dictionary for our results
-    var pointsTally = {}
+    let pointsTally = {}
 
     // Access Medals won for each event
     medals.forEach( stat => {
 
         // Isolate event's podium scores
-        var podiumResults = stat["podium"]
+        let podiumResults = stat["podium"]
 
         // Create a mapping so that each countries place can be converted to a score
-        var scores = podiumResults.map( function(data) { 
+        let scores = podiumResults.map( function(data) { 
 
-            var placement = data.charAt(0)
-            var country = data.substring(2)
+            let placement = data.charAt(0)
+            let country = data.substring(2)
             
             // We need to map each placement with a score
-            // then return it back to the array
+            // then return it back to the array with the country
 
             switch (placement) {
                 case "1" :
@@ -30,11 +30,12 @@ function createMedalTable(medals) {
         // Iterate through each score and populate the points tally with the country and their acquired score
         scores.forEach( country => {
 
-            var points = country[0]
-            var name = country[1]
+            let points = country[0]
+            let name = country[1]
 
             // Ternary Operator: If country is in the tally, then the score will be added to their current score
             // else the country will be added to the list with the score achieved from that event
+      
             pointsTally.hasOwnProperty(name) ? pointsTally[name] += points : pointsTally[name] = points
         });   
     }); 
