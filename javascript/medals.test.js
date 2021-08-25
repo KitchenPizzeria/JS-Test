@@ -1,43 +1,30 @@
 function createMedalTable(medals) {
-    // First Lets define the dictionary for our results
+    // First lets define the dictionary for our results
     let pointsTally = {}
 
     // Access Medals won for each event
-    medals.forEach( stat => {
+    medals.forEach( eachEvent => {
 
         // Isolate event's podium scores
-        let podiumResults = stat["podium"]
+        let podiumResults = eachEvent.podium // ["1.China", "2.Germany", "3.ROC"]
 
-        // Create a mapping so that each countries place can be converted to a score
-        let scores = podiumResults.map( function(data) { 
+        // Access each place on the podium and allocate the correct points
+        for (let finishedPositions in podiumResults) { // finishedPositions = ["1.China"]
 
-            let placement = data.charAt(0)
-            let country = data.substring(2)
-            
-            // We need to map each placement with a score
-            // then return it back to the array with the country
+            let placement = finishedPositions.charAt(0) // "1"
+            let country = finishedPositions.substring(2) // "China"
 
+            // Ternary Operator used to identify countries that are already inside the points tally, their score
+            // will be added if they are and if not then the score for that event will be recorded
             switch (placement) {
                 case "1" :
-                    return [3, country]
+                    pointsTally.hasOwnProperty(country) ? pointsTally[country] += 3 : pointsTally[country] = 3
                 case "2" :
-                    return [2, country]
+                    pointsTally.hasOwnProperty(country) ? pointsTally[country] += 2 : pointsTally[country] = 2
                 case "3" :
-                    return [1, country]
+                    pointsTally.hasOwnProperty(country) ? pointsTally[country] += 1 : pointsTally[country] = 1
             }  
-        })
-
-        // Iterate through each score and populate the points tally with the country and their acquired score
-        scores.forEach( country => {
-
-            let points = country[0]
-            let name = country[1]
-
-            // Ternary Operator: If country is in the tally, then the score will be added to their current score
-            // else the country will be added to the list with the score achieved from that event
-      
-            pointsTally.hasOwnProperty(name) ? pointsTally[name] += points : pointsTally[name] = points
-        });   
+        }
     }); 
     
     return pointsTally
@@ -47,7 +34,9 @@ describe("Medal Table Generator", () => {
 
     it("creates correct data structure ", () => {
        
-        const medals = [{
+        
+        const medals = [
+            {
                 sport: "cycling",
                 podium: ["1.China", "2.Germany", "3.ROC"]
             },
