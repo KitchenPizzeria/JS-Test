@@ -1,29 +1,30 @@
 function createMedalTable(medals) {
-    // First lets define the dictionary for our results
+
+    // First lets define the 'enum' for our results
+    const points = {
+        '1': 3,
+        '2': 2,
+        '3': 1
+    }
+
+    // Dictionary to hold the results
     let pointsTally = {}
 
     // Access Medals won for each event
     medals.forEach( eachEvent => {
-
+        
         // Isolate event's podium scores
         let podiumResults = eachEvent.podium // ["1.China", "2.Germany", "3.ROC"]
-
+        
         // Access each place on the podium and allocate the correct points
-        for (let finishedPositions in podiumResults) { // finishedPositions = ["1.China"]
-
-            let placement = finishedPositions.charAt(0) // "1"
-            let country = finishedPositions.substring(2) // "China"
-
-            // Ternary Operator used to identify countries that are already inside the points tally, their score
-            // will be added if they are and if not then the score for that event will be recorded
-            switch (placement) {
-                case "1" :
-                    pointsTally.hasOwnProperty(country) ? pointsTally[country] += 3 : pointsTally[country] = 3
-                case "2" :
-                    pointsTally.hasOwnProperty(country) ? pointsTally[country] += 2 : pointsTally[country] = 2
-                case "3" :
-                    pointsTally.hasOwnProperty(country) ? pointsTally[country] += 1 : pointsTally[country] = 1
-            }  
+        for (let finishedPositions of podiumResults) { // finishedPositions = ["1.China"]
+        
+            let placement = finishedPositions.charAt(0) // "1" or "2" or "3"
+            let country = finishedPositions.substring(2) // "China" or "Germany" or "ROC"
+            let score = points[placement] // 1 --> 3 , 2 --> 2 , 3 --> 1
+      
+            // Countries not in the list will have the event score recorded, else score will just be added
+            pointsTally.hasOwnProperty(country) ? pointsTally[country] += score : pointsTally[country] = score    
         }
     }); 
     
@@ -36,10 +37,12 @@ describe("Medal Table Generator", () => {
        
         
         const medals = [
+            
             {
                 sport: "cycling",
                 podium: ["1.China", "2.Germany", "3.ROC"]
             },
+
             {
                 sport: "fencing",
                 podium: ["1.ROC", "2.France", "3.Italy"]
