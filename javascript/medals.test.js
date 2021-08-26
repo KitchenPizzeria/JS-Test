@@ -1,6 +1,6 @@
 function createMedalTable(medals) {
 
-    // First lets define the 'enum' for our results
+    // Define the 'enum' for our results
     const points = {
         '1': 3,
         '2': 2,
